@@ -30,10 +30,10 @@ def graythresh(array,level):
 #   in to byte and range from [0 255]
     if maxVal <= 1:
         array = array*255
-        # print "New max value is %s" %(np.max(array))
+        # print("New max value is", np.max(array))
     elif maxVal >= 256:
         array = np.int((array - minVal)/(maxVal - minVal))
-        # print "New min value is %s" %(np.min(array))
+        # print("New min value is", np.min(array))
     
     # turn the negative to natural number
     negIdx = np.where(array < 0)
@@ -182,7 +182,7 @@ def GreenViewComputing_ogr_6Horizon(GSVinfoFolder, outTXTRoot, greenmonth, key_f
         key = line[:-1]
         keylist.append(key)
     
-    print ('The key list is:=============', keylist)
+    print('The key list is:=============', keylist)
     
     # set a series of heading angle
     headingArr = 360/6*np.array([0,1,2,3,4,5])
@@ -197,7 +197,7 @@ def GreenViewComputing_ogr_6Horizon(GSVinfoFolder, outTXTRoot, greenmonth, key_f
     
     # the input GSV info should be in a folder
     if not os.path.isdir(GSVinfoFolder):
-        print 'You should input a folder for GSV metadata'
+        print('You should input a folder for GSV metadata')
         return
     else:
         allTxtFiles = os.listdir(GSVinfoFolder)
@@ -223,7 +223,7 @@ def GreenViewComputing_ogr_6Horizon(GSVinfoFolder, outTXTRoot, greenmonth, key_f
                 lon = metadata[5]
                 lat = metadata[7][:-1]
                 
-                # print (lon, lat, month, panoID, panoDate)
+                # print(lon, lat, month, panoID, panoDate)
                 
                 # in case, the longitude and latitude are invalide
                 if len(lon)<3:
@@ -244,7 +244,7 @@ def GreenViewComputing_ogr_6Horizon(GSVinfoFolder, outTXTRoot, greenmonth, key_f
             
             
             # check whether the file already generated, if yes, skip. Therefore, you can run several process at same time using this code.
-            print GreenViewTxtFile
+            print(GreenViewTxtFile)
             if os.path.exists(GreenViewTxtFile):
                 continue
             
@@ -264,7 +264,7 @@ def GreenViewComputing_ogr_6Horizon(GSVinfoFolder, outTXTRoot, greenmonth, key_f
                     greenPercent = 0.0
 
                     for heading in headingArr:
-                        print "Heading is: ",heading
+                        print("Heading is: ",heading)
                         
                         # using different keys for different process, each key can only request 25,000 imgs every 24 hours
                         URL = "http://maps.googleapis.com/maps/api/streetview?size=400x400&pano=%s&fov=60&heading=%d&pitch=%d&sensor=false&key=AIzaSyAwLr6Oz0omObrCJ4n6lI4VbCCvmaL1Z3Y"%(panoID,heading,pitch)
@@ -286,10 +286,10 @@ def GreenViewComputing_ogr_6Horizon(GSVinfoFolder, outTXTRoot, greenmonth, key_f
 
                     # calculate the green view index by averaging six percents from six images
                     greenViewVal = greenPercent/numGSVImg
-                    print 'The greenview: %s, pano: %s, (%s, %s)'%(greenViewVal, panoID, lat, lon)
+                    print(f"The greenview: {greenViewVal}, pano: {panoID}, ({lat}, {lon})")
 
                     # write the result and the pano info to the result txt file
-                    lineTxt = 'panoID: %s panoDate: %s longitude: %s latitude: %s, greenview: %s\n'%(panoID, panoDate, lon, lat, greenViewVal)
+                    lineTxt = f"panoID: {panoID} panoDate: {panoDate} longitude: {lon} latitude: {lat}, greenview: {greenViewVal}\n"
                     gvResTxt.write(lineTxt)
 
 

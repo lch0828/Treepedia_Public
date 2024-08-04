@@ -89,7 +89,7 @@ def createPoints(inshp, outshp, mini_dist):
                         point = transform(project2, point)
                         output.write({'geometry':mapping(point),'properties': {'id':1}})
                 except:
-                    print ("You should make sure the input shapefile is WGS84")
+                    print("You should make sure the input shapefile is WGS84")
                     return
                     
     print("Process Complete")

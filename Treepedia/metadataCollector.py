@@ -93,8 +93,8 @@ def GSVpanoMetadataCollector(samplesFeatureClass,num,ouputTextFolder):
                     panoLat = panoInfo.items()[8][1]
                     panoLon = panoInfo.items()[9][1]
                     
-                    print 'The coordinate (%s,%s), panoId is: %s, panoDate is: %s'%(panoLon,panoLat,panoId, panoDate)
-                    lineTxt = 'panoID: %s panoDate: %s longitude: %s latitude: %s\n'%(panoId, panoDate, panoLon, panoLat)
+                    print(f"The coordinate ({panoLon},{panoLat}), panoId is: {panoId}, panoDate is: {panoDate}")
+                    lineTxt = f"panoID: {panoId} panoDate: {panoDate} longitude: {panoLon} latitude: {panoLat}\n"
                     panoInfoText.write(lineTxt)
                     
         panoInfoText.close()
