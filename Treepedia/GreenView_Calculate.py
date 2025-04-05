@@ -172,7 +172,7 @@ def GreenViewComputing_ogr_6Horizon(GSVinfoFolder, outTXTRoot, greenmonth, key_f
     from PIL import Image
     import numpy as np
     import requests
-    from StringIO import StringIO
+    from io import BytesIO
     
     
     # read the Google Street View API key files, you can also replace these keys by your own

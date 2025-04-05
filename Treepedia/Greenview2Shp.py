@@ -136,8 +136,7 @@ def CreatePointFeature_ogr(outputShapefile,LonLst,LatLst,panoIDlist,panoDateList
     
     """
 
-    import ogr
-    import osr
+    from osgeo import ogr, osr
 
     # create shapefile and add the above chosen random points to the shapfile
     driver = ogr.GetDriverByName("ESRI Shapefile")

@@ -16,10 +16,11 @@ def GSVpanoMetadataCollector(samplesFeatureClass,num,ouputTextFolder):
         
     '''
     
-    import urllib,urllib2
+    import urllib,urllib3
     import xmltodict
-    import cStringIO
-    import ogr, osr
+    import json
+    import io
+    from osgeo import ogr, osr
     import time
     import os,os.path
     
@@ -40,7 +41,7 @@ def GSVpanoMetadataCollector(samplesFeatureClass,num,ouputTextFolder):
     # loop all the features in the featureclass
     feature = layer.GetNextFeature()
     featureNum = layer.GetFeatureCount()
-    batch = featureNum/num
+    batch = featureNum//num +1
     
     for b in range(batch):
         # for each batch process num GSV site
@@ -67,31 +68,32 @@ def GSVpanoMetadataCollector(samplesFeatureClass,num,ouputTextFolder):
                 # trasform the current projection of input shapefile to WGS84
                 #WGS84 is Earth centered, earth fixed terrestrial ref system
                 geom.Transform(transform)
-                lon = geom.GetX()
-                lat = geom.GetY()
+                lat = geom.GetX()
+                lon = geom.GetY()
                 key = r'' #Input Your Key here 
                 
                 # get the meta data of panoramas 
-                urlAddress = r'http://maps.google.com/cbk?output=xml&ll=%s,%s'%(lat,lon)
+                urlAddress = r'https://maps.googleapis.com/maps/api/streetview/metadata?location={},{}&key=AIzaSyDqOgEWmqig04CypCMucACGE9T5mT6bT-I'.format(lat,lon)
+                print(urlAddress)
                 
                 time.sleep(0.05)
                 # the output result of the meta data is a xml object
-                metaDataxml = urllib2.urlopen(urlAddress)
-                metaData = metaDataxml.read()    
+                metaDataxml = urllib.request.urlopen(urlAddress)
+                metaData = metaDataxml.read().decode('utf-8')
+
+                # print("Raw response (first 500 characters):", metaData[:500])  
                 
-                data = xmltodict.parse(metaData)
+                data = json.loads(metaData)
                 
                 # in case there is not panorama in the site, therefore, continue
-                if data['panorama']==None:
+                if data['status']!='OK':
                     continue
-                else:
-                    panoInfo = data['panorama']['data_properties']
-                                        
+                else:                                        
                     # get the meta data of the panorama
-                    panoDate = panoInfo.items()[4][1]
-                    panoId = panoInfo.items()[5][1]
-                    panoLat = panoInfo.items()[8][1]
-                    panoLon = panoInfo.items()[9][1]
+                    panoDate = data['date']
+                    panoId = data['pano_id']
+                    panoLat = data['location']['lat']
+                    panoLon = data['location']['lng']
                     
                     print(f"The coordinate ({panoLon},{panoLat}), panoId is: {panoId}, panoDate is: {panoDate}")
                     lineTxt = f"panoID: {panoId} panoDate: {panoDate} longitude: {panoLon} latitude: {panoLat}\n"
